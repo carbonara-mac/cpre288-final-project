@@ -25,15 +25,14 @@ void adc_init(void)
 
     // Initialize ADC Registers
     ADC0_ACTSS_R &= 0b1101; // disables SS1
-    ADC0_EMUX_R = 0x0; //CHECK IF THIS WORKS
-    ADC0_SSMUX1_R |= 0x000A; // First sample AIN10                  ???????????????????
-    ADC0_SSCTL1_R |= 0x00006; // TS0, IE0, only need to sample once ??????????????????
-
+    ADC0_EMUX_R = 0x0; //Default
+    ADC0_SSMUX1_R |= 0x000A; // First sample AIN10
+    ADC0_SSCTL1_R |= 0x00006; // TS0, IE0, only need to sample once
     ADC0_SAC_R = 0b100;
-
     ADC0_ACTSS_R |= 0b0010; //enable SS1, disables SS0, SS2, SS3
 
 }
+
 void adc_read(void)
 {
 
@@ -45,7 +44,5 @@ void adc_read(void)
 
     IR_raw_sample = ADC0_SSFIFO1_R; // Read sample from AIN10
     ADC0_ISC_R |= 0b0010; // Clear the interrupt in RIS
-
-    // timer_waitMillis(100); // Used to slow down displayed sample to read from lcd
 
 }
