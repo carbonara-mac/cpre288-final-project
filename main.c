@@ -2,9 +2,10 @@
  * main.c
  */
 
-#define _SERVO_CALLIBRATION 1
+// Run each independently of each other
+#define _SERVO_CALLIBRATION 0
 #define _IR_CALLIBRATION 0
-#define _MAIN 0
+#define _MAIN 1
 
 #include <stdio.h>
 #include "scan.h"

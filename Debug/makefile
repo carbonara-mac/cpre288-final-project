@@ -11,13 +11,19 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./Timer.obj" \
+"./adc.obj" \
 "./button.obj" \
 "./lcd.obj" \
 "./main.obj" \
+"./movement.obj" \
 "./object.obj" \
+"./open_interface.obj" \
+"./ping.obj" \
+"./print.obj" \
 "./scan.obj" \
 "./servo.obj" \
 "./tm4c123gh6pm_startup_ccs.obj" \
+"./uart.obj" \
 "../tm4c123gh6pm.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -162,8 +168,8 @@ cpre288-final-project.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "Timer.obj" "button.obj" "lcd.obj" "main.obj" "object.obj" "scan.obj" "servo.obj" "tm4c123gh6pm_startup_ccs.obj" 
-	-$(RM) "Timer.d" "button.d" "lcd.d" "main.d" "object.d" "scan.d" "servo.d" "tm4c123gh6pm_startup_ccs.d" 
+	-$(RM) "Timer.obj" "adc.obj" "button.obj" "lcd.obj" "main.obj" "movement.obj" "object.obj" "open_interface.obj" "ping.obj" "print.obj" "scan.obj" "servo.obj" "tm4c123gh6pm_startup_ccs.obj" "uart.obj" 
+	-$(RM) "Timer.d" "adc.d" "button.d" "lcd.d" "main.d" "movement.d" "object.d" "open_interface.d" "ping.d" "print.d" "scan.d" "servo.d" "tm4c123gh6pm_startup_ccs.d" "uart.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
