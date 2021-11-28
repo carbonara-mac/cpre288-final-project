@@ -1,0 +1,5 @@
+
+Bot 06
+int right_calibration_value = 313984;
+int left_calibration_value = 286848;
+
