@@ -1,8 +1,18 @@
 /*
- * scan.h
+ *  scan.c
+ *
+ *  Small program to calibrate the servo motor.
+ *  User moves servo to 0 and 180 degrees and sets those values to
+ *  right_calibration_value and left_calibration_value in main.c
+ *
+ *  Note: Intended to run entirely independent
+ *      _SERVO_CALIBRATION 1
+ *      _IR_CALIBRATION 0
+ *      _MAIN 0
  *
  *  Created on: Nov 27, 2021
- *      Author: jminardi
+ *  Author: James Minardi
+ *
  */
 
 #ifndef SCAN_H_
@@ -12,20 +22,7 @@
 #include "lcd.h"
 #include "servo.h"
 #include "Timer.h"
-    // These will be different for each physical CyBOT servo
-    // where 0 degrees (right), and 180 degrees (left) is located
-    // These values can be found by running the servo_calibrate function.
-    // Once you know the values, then you can set them in main().
-    int right_calibration_value;
-    int left_calibration_value;
 
-
-    // Return a struct containing the right (0 degree), and
-    // left (180 degree) values that can be used to set
-    // right_calibration_value, and left_calibration_value
-    // NOTE: If servo is not enabled, then returns -1 for right and left.
-    void servo_callibration(void);
-
-
+void servo_calibration(void);
 
 #endif /* SCAN_H_ */
