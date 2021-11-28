@@ -7,7 +7,6 @@
 
 #include "open_interface.h"
 #include "object.h"
-#include "cyBot_Scan.h"
 #include "Timer.h"
 #include "lcd.h"
 #include "movement.h"
