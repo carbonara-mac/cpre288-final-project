@@ -22,7 +22,10 @@
 #include "lcd.h"
 #include "servo.h"
 #include "Timer.h"
+#include "ping.h"
+#include "adc.h"
 
 void servo_calibration(void);
+void IR_calibration(void);
 
 #endif /* SCAN_H_ */

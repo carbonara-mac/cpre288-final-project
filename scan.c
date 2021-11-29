@@ -108,3 +108,20 @@ void servo_calibration(void)
     lcd_printf("Right: %d\nLeft: %d", right_value, left_value);
 } // END servo_calibration
 
+void IR_calibration(void) {
+
+    servo_init1();
+    adc_init();
+    ping2_init();
+
+    while (1) {
+
+        float sound_dist = ping_read();
+        adc_read();
+
+        lcd_printf("sound: %f\nIR: %d\n", sound_dist, IR_raw_sample);
+        timer_waitMillis(1000);
+
+    }
+} // END IR_calibration
+
