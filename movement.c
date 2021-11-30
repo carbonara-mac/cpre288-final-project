@@ -85,72 +85,112 @@ int obstacleCheck(oi_t *sensor_data)
 //**************BUMPER SENSORS*******************************
     if (sensor_data->bumpLeft)
     {
-        oi_setWheels(0, 0); //STOP robot as soon as bump sensors are pushed
-        /*
-         * TODO: Establish a maneuvering standard when bump sensors are pushed
-         */
+        oi_setWheels(0, 0); //STOP robot as soon as bumpLeft = TRUE
+        moveBackward(sensor_data, 3); //move backwards 3 cm
+
         return 1; //return a 1 if left bump sensor = true
     }
     if (sensor_data->bumpRight)
     {
-        oi_setWheels(0, 0);
-        /*
-         * TODO: Establish a maneuvering standard when bump sensors are pushed
-         */
+        oi_setWheels(0, 0); //STOP robot as soon as bumpRight = TRUE
+        moveBackward(sensor_data, 3); //move backwards 3 cm
+
         return 2; //returns a 2 if right bump sensor = true
     }
     //************CLIFF SENSORS*******************************
-    if (sensor_data->cliffLeft)
+    if (sensor_data->cliffLeft > 2800 || sensor_data->cliffLeft < 1600)
     {
-        oi_setWheels(0, 0);
-        /*
-         * TODO: Establish a maneuvering standard for left cliff sensor
-         */
-        return 3; //returns a 3 if left cliff sensor = true
-    }
-    if (sensor_data->cliffFrontLeft)
-    {
-        oi_setWheels(0, 0);
-        /*
-         * TODO: Establish a maneuvering standard for left cliff sensor
-         */
-        return 4; //returns a 3 if left cliff sensor = true
-    }
-    if (sensor_data->cliffFrontRight)
-    {
-        oi_setWheels(0, 0);
-        /*
-         * TODO: Establish a maneuvering standard for left cliff sensor
-         */
-        return 5; //returns a 3 if left cliff sensor = true
-    }
-    if (sensor_data->cliffRight)
-    {
-        oi_setWheels(0, 0);
-        /*
-         * TODO: Establish a maneuvering standard for left cliff sensor
-         */
-        return 6; //returns a 3 if left cliff sensor = true
+        //TODO: Implement flag?
+        oi_setWheels(0, 0); //STOP, robot sensed white tape or hole
+        turnLeft(sensor_data, 45); //Turn left 45 degrees
+        moveBackward(sensor_data, 5); //Move back 5 cm
+        turnRight(sensor_data, 45); //revert back to original angle
+
+        if (sensor_data->cliffLeft > 2800){
+            oi_update(sensor_data);
+            return 3; //tape detected for CL
+        }
+        else{
+            oi_update(sensor_data);
+            return 4; //hole detected for CL
+        }
     }
 
+
+    if (sensor_data->cliffFrontLeft > 2800 || sensor_data->cliffFrontLeft < 1600)
+    {
+        //TODO: Implement flag?
+        oi_setWheels(0, 0); //STOP, robot sensed white tape or hole
+        turnLeft(sensor_data, 60); //Turn left 60 degrees
+        moveBackward(sensor_data, 5); //Move back 5 cm
+        turnRight(sensor_data, 60); //revert back to original angle
+
+        if (sensor_data->cliffFrontLeft > 2800)
+        {
+            oi_update(sensor_data);
+            return 5; //tape detected for CFL
+        }
+        else
+        {
+            oi_update(sensor_data);
+            return 6; //hole detected for CFL
+        }
+    }
+
+    if (sensor_data->cliffFrontRight > 2800 || sensor_data->cliffFrontRight < 1600)
+    {
+        //TODO: Implement flag?
+                oi_setWheels(0, 0); //STOP, robot sensed white tape or hole
+                turnRight(sensor_data, 60); //Turn left 60 degrees
+                moveBackward(sensor_data, 5); //Move back 5 cm
+                turnLeft(sensor_data, 60); //revert back to original angle
+
+                if (sensor_data->cliffFrontRight > 2800)
+                {
+                    oi_update(sensor_data);
+                    return 7; //tape detected for CFR
+                }
+                else
+                {
+                    oi_update(sensor_data);
+                    return 8; //hole detected for CFR
+                }
+            }
+
+    if (sensor_data->cliffRight > 2800 || sensor_data->cliffRight < 1600)
+    {
+        //TODO: Implement flag?
+               oi_setWheels(0, 0); //STOP, robot sensed white tape or hole
+               turnRight(sensor_data, 45); //Turn left 45 degrees
+               moveBackward(sensor_data, 5); //Move back 5 cm
+               turnLeft(sensor_data, 45); //revert back to original angle
+
+               if (sensor_data->cliffRight > 2800){
+                   oi_update(sensor_data);
+                   return 9; //tape detected for CR
+               }
+               else{
+                   oi_update(sensor_data);
+                   return 10; //hole detected for CR
+               }
+           }
+
     //*************Wheel Drop SENSORS*******************************
+   /* DISCONTINUED
     if (sensor_data->wheelDropLeft)
     {
         oi_setWheels(0, 0);
-        /*
-         * TODO: Establish a manuvering standard for left wheel drop
-         */
-        return 7;
+        return 11;
     }
 
     if (sensor_data->wheelDropRight)
     {
         oi_setWheels(0, 0);
-        /*
-         * TODO: Establish a manuvering standard for right wheel drop
-         */
-        return 8;
+        return 12;
     }
+    */
+
 return 0;
 }
+
 
