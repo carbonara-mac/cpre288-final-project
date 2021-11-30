@@ -4,7 +4,7 @@
  *  Created on: Nov 30, 2021
  *      Author: machargo
  */
-
+//THIS IS A WORK IN PROGRESS
 
 #include "open_interface.h"
 #include "object.h"
@@ -39,7 +39,7 @@ servo_init();
 
 char keyPressMsg[] = "Got an  \n\r";
 int valIndex = 7; //num for message
-char fwMsg[] = "How many milis?"; 
+char fbMsg[] = "How many milis?"; 
 char lrMsg[] = "How many degrees?"; 
 
 int inputNum = 0; 
@@ -54,37 +54,37 @@ while (1){
             uart_sendStr(keyPressMsg);
         }
 
+	//forward
 	if(uart_data == 'w' ){
 	
 	inputNum = uart_data;
 	
 	oi_setWheels(inputNum, inputNum);
 	}
-
+	//backward
 	if(uart_data == 's' ){
-	
+	uart_sendStr(fbMsg);
+	inputNum = uart_data;
+	oi_setWheels( -1 * inputNum, -1 * inputNum);
+	inputNum=0;
+	}
+	//rotate right
+	if(uart_data == 'd' ){
+	uart_sendStr(lrMsg);
+	inputNum = uart_data;
+	oi_setWheels( -1 * inputNum, inputNum);
+	inputNum=0;
+	}
+	//rotate left
+	if(uart_data == 'a' ){
+	uart_sendStr(lrMsg);
 	inputNum = uart_data;
 	
-	oi_setWheels(inputNum, inputNum);
+	oi_setWheels(inputNum, -1* inputNum);
 	inputNum=0;
 	}
 	
-	if(uart_data == 'w' ){
-	
-	inputNum = uart_data;
-	
-	oi_setWheels(inputNum, inputNum);
-	inputNum=0;
-	}
-	
-	if(uart_data == 'w' ){
-	
-	inputNum = uart_data;
-	
-	oi_setWheels(inputNum, inputNum);
-	inputNum=0;
-	}
-	
+	//TODO
 	//scan 0-180
 	//scan in general
 	//print diagnostics 
