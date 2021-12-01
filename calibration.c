@@ -1,6 +1,21 @@
 /*
  *  calibration.c
  *
+ *  Created on: Nov 30, 2021
+ *  Author: James Minardi
+ */
+
+#include "scan.h"
+
+// Clock cycles to increment for fast and slow modes
+#define FAST_INCREMENT 512
+#define SLOW_INCREMENT 128
+
+void bot_calibration(void) {
+
+}
+
+/*
  *  Small program to calibrate the servo motor.
  *  User moves servo to 0 and 180 degrees and sets those values to
  *  right_calibration_value and left_calibration_value in main.c
@@ -10,16 +25,7 @@
  *      _IR_CALIBRATION 0
  *      _MAIN 0
  *
- *  Created on: Nov 30, 2021
- *  Author: jminardi
  */
-
-#include "scan.h"
-
-// Clock cycles to increment for fast and slow modes
-#define FAST_INCREMENT 512
-#define SLOW_INCREMENT 128
-
 void servo_calibration(void)
 {
     // Initializations for servo calibration
@@ -38,10 +44,8 @@ void servo_calibration(void)
     // right=1 calibrating right (0 degrees); right=0 calibrating left (180 degrees)
     int right = 1;
 
-    /*
-     * Sets servo to the theoretical 0 degrees position.
-     * Must disable and reenable the timer b before adjusting the match values
-     */
+    //Sets servo to the theoretical 0 degrees position.
+    //Must disable and reenable the timer b before adjusting the match values
     int match = 0x4A380;                // Theoretical 0 degrees: 304,000 (1ms = 0 degrees)
     TIMER1_CTL_R &= 0b011111111;        // Disable timer b
     TIMER1_TBMATCHR_R = match;
@@ -109,8 +113,25 @@ void servo_calibration(void)
 
 
 /*
+ *  Small program to calibrate the IR sensor.
+ *  User moves cyBot in front of flat surface and records the IR_raw_value at increments
+ *  of 5-10cm from 0 to 50cm. Using a graphing calculator, the user will find a best fit
+ *  inverse function. They will then enable and implement the equation in scan.c to the
+ *  corresponding bot.
+ *
+ *  Input into graphing calculator with the IR_raw_value as the y-axis and centimeters
+ *  as the x-axis.
+ *
+ *  In Desmos, use equation:
+ *
+ *      y1 ~ a/(x1+b) + c
  *
  *
+ *
+ *  Note: Intended to run entirely independent
+ *      _SERVO_CALIBRATION 0
+ *      _IR_CALIBRATION 1
+ *      _MAIN 0
  */
 void IR_calibration(void) {
 
