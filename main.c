@@ -3,8 +3,8 @@
  */
 
 // Run each independently of each other
-#define _SERVO_CALIBRATION 0
-#define _IR_CALIBRATION 1
+#define _SERVO_CALIBRATION 1
+#define _IR_CALIBRATION 0
 #define _MAIN 0
 
 #include <stdio.h>
@@ -21,6 +21,7 @@
  */
 int right_calibration_value = 313984; // Run _SERVO_CALLIBRATION by itself to find values
 int left_calibration_value = 286848;
+int BOT = 6;
 
 int main(void)
 {
@@ -34,6 +35,9 @@ int main(void)
 #endif // _IR_CALIBRATRION
 
 #if _MAIN
+    timer_init();
+    lcd_init();
+    uart_init();
 
 #endif // _MAIN
 
