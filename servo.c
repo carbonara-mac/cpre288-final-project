@@ -40,9 +40,11 @@ void servo_init1(void)
     servo_move1(0);                    // Initialize to theoretical 0 degrees
 } // END servo_init
 
-/**
- * @param degrees Degrees to move servo motor to
- * @return match value for the specified degrees for debugging
+/*
+ * Moves servo motor to specified degrees.
+ *
+ * @param degrees - Degrees to move servo motor to
+ * @return match - Value for the specified degrees for debugging
  */
 int servo_move1(int degrees)
 {
@@ -76,8 +78,8 @@ int servo_move1(int degrees)
  * Converts degrees to match value for the timer. Uses the left_calibration_value and right_calibration_value set by the user by using
  * servo_calibration() in scan.h
  *
- * @param degrees Degrees to convert to timer match value
- * @return timer match value for @param degrees
+ * @param degrees - Degrees to convert to timer match value
+ * @return timer - Match value for @param degrees
  */
 int degrees_to_match(int degrees)
 {

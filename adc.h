@@ -1,7 +1,8 @@
 /*
- *  adc.c
+ *  adc.h
  *
- * 	ADC and IR sensor functionality
+ * 	ADC and IR sensor functionality. Includes initializaion and reading of ADC samples
+ * 	as well as conversion methods from raw IR samples to distance in centimeters
  *
  *  Created on: Oct 19, 2021
  *  Author: James Minardi
@@ -19,7 +20,12 @@
 #include "lcd.h"
 
 /*
- * Raw IR sample updated after every call to adc_read
+ * Current bot being used. Updated manually in main.c
+ */
+extern int BOT; // main.c
+
+/*
+ * Variable is updated after every call to adc_read
  * Must be converted using adc_
  * Note: Read only
  * TODO: Put in a struct with sonar?
@@ -35,5 +41,36 @@ void adc_init(void);
  * Complete ADC conversion and read the sample, assigning it to IR_raw_sample
  */
 void adc_read(void);
+
+/*
+ * Converts a raw IR sample to the distance in centimeters
+ * using the specified bot's unique conversion equation.
+ *
+ * @param raw - Raw IR sample to be converted to distance
+ * @return distance - distance in centimeters
+ */
+float adc_to_cm(int raw);
+
+/*
+ * Specific bot's conversion equation called by adc_to_cm
+ * @param raw - raw IR sample to conver to distance
+ * @return distance - distance in centimeters
+ */
+float adc_to_cm_1(int raw);
+float adc_to_cm_2(int raw);
+float adc_to_cm_3(int raw);
+float adc_to_cm_4(int raw);
+float adc_to_cm_5(int raw);
+float adc_to_cm_6(int raw);
+float adc_to_cm_7(int raw);
+float adc_to_cm_8(int raw);
+float adc_to_cm_9(int raw);
+float adc_to_cm_10(int raw);
+float adc_to_cm_11(int raw);
+float adc_to_cm_12(int raw);
+float adc_to_cm_13(int raw);
+float adc_to_cm_14(int raw);
+float adc_to_cm_15(int raw);
+
 
 #endif /* ADC_H_ */

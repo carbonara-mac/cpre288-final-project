@@ -1,126 +1,122 @@
 /*
- *
  *   uart.c
  *
+ *   UART capability using 115200 baud rate
  *
- *
- *
- *
- *   @author
- *   @date
+ *   Created on: Nov 30, 2021
+ *   Author: James Minardi, Danny Cao
  */
 
 #include "uart.h"
-#include "timer.h"
-#define REPLACE_ME 0x00
 
-volatile int transmit_event;
-volatile int receive_event;
-volatile char receive_data;
-
+/*
+ * Initialize UART functionality using GPIO Port B wires 0:1 and UART1
+ */
 void uart_init(void)
 {
+    SYSCTL_RCGCGPIO_R |= 0b00000010;        // Enable GPIO Port B clock
+    SYSCTL_RCGCUART_R |= 0b00000010;        // Enable UART 1 clock
+    GPIO_PORTB_AFSEL_R = 0b00000011;        // Set Port B Wires 0:1 as alternate function (peripherals)
+    GPIO_PORTB_PCTL_R  = 0x00000011;        // Use PB0 as UART receive and PB1 as UART transmit
+    GPIO_PORTB_DEN_R   = 0b00000011;        // Enable PB0 and PB1
+    GPIO_PORTB_DIR_R   = 0b00000001;        // Set PB0 as input and PB1 as output
 
-    SYSCTL_RCGCGPIO_R |= 0b00000010;      // enable clock GPIOB (page 340)
-    SYSCTL_RCGCUART_R |= 0b00000010;      // enable clock UART1 (page 344)
-    GPIO_PORTB_AFSEL_R = 0b00000011; // sets PB0 and PB1 as peripherals (page 671)
-    GPIO_PORTB_PCTL_R = 0x00000011; // pmc0 and pmc1       (page 688)  also refer to page 650
-    GPIO_PORTB_DEN_R = 0b00000011;        // enables pb0 and pb1
-    GPIO_PORTB_DIR_R = 0b00000001;        // sets pb0 as output, pb1 as input
-
-    //compute baud values [UART clock= 16 MHz]
+    // Compute baud registers using 16MHz clock cycle, and 115200 baud rate
     double fbrd;
     int ibrd;
-
-    fbrd = 16000000.0 / (16.0 * 115200.0); // page 903;
+    fbrd = 16000000.0 / (16.0 * 115200.0);
     ibrd = (int) fbrd;
     fbrd = (int) ((fbrd - ibrd) * 64 + 0.5);
 
-    UART1_CTL_R &= 0xFE;      // disable UART1 (page 918)
-    UART1_IBRD_R = ibrd;        // write integer portion of BRD to IBRD
-    UART1_FBRD_R = fbrd;   // write fractional portion of BRD to FBRD
-    UART1_LCRH_R = 0b01100000; // write serial communication parameters (page 916) * 8bit and no parity
-    UART1_CC_R = 0b0000;          // use system clock as clock source (page 939)
-    UART1_CTL_R |= 0b1100000001; // enable UART1
-    //UART1_DR_R = 0x00;
+    UART1_CTL_R &= 0xFE;                    // Disable UART1 for configuration
+    UART1_IBRD_R = ibrd;                    // Integer part of BRD into IBRD
+    UART1_FBRD_R = fbrd;                    // Fractional part of BRD into FBRD
+    UART1_LCRH_R = 0b01100000;              // Line control: 8 Bit, no parity
+    UART1_CC_R = 0b0000;                    // Use system clock as clock source
+    UART1_CTL_R |= 0b1100000001;            // Renable UART1
+    // TODO: UART1_DR_R = 0x00; Doesn't work? Look into this
 
-}
+    uart_interrupt_init();                  // Enable receive interrupt
 
+} // END uart_init
+
+/*
+ * Initializes UART interrupts for receive
+ */
+void uart_interrupt_init(void)
+{
+    UART1_CTL_R &= 0b0111111110;            // Disable UART1 for configuration
+    UART1_ICR_R |= 0b11111110000;           // Clear interrupt flags
+    UART1_IM_R  |= 0b010000;                // Enable interrupt on receive
+    NVIC_EN0_R  &= 0x00000040;              // Enable UART 1 interrupts
+    NVIC_EN0_R  |= 0x00000040;              // ""
+
+    // Find the vector number of UART1 in table 2-9 ! UART1 is 22 from vector number page 104
+    IntRegister(INT_UART1, uart_interrupt_handler); // Set interrupt handler to uart_interrupt_handler
+    IntMasterEnable();
+
+    UART1_CTL_R |= 0b1100000001;            // Renable UART1
+
+} // END uart_interrupt_init
+
+/*
+ * Interrupt handler for UART 1
+ */
+void uart_interrupt_handler(void)
+{
+    if (UART1_MIS_R & 0b010000)                 // Check for UART receive interrupt
+    {
+        uart_data = (char) (UART1_DR_R & 0xFF); // Store received data
+        uart_receive_flag = 1;                  // Data received flag enable
+        UART1_ICR_R = UART1_ICR_R | 010000;     // Clear receive bit interrupt
+    }
+} // END uart_interrupt_handler
+
+/*
+ * Transmits data through UART 1
+ *
+ * @param data - 8 bits of data to send
+ */
 void uart_sendChar(char data)
 {
-
-    while (UART1_FR_R & 0b00100000 == 0)
-    { //wait here as long as the FIFO Transmit is full.
-
+    while (UART1_FR_R & 0b00100000 == 0)        // Wait while transmit FIFO is full
+    {
     }
+    UART1_DR_R = data;                          // Send data
+    timer_waitMillis(1);                        // Does not work without
 
-    UART1_DR_R = data; //send data
-    timer_waitMillis(1); // DO NOT REMOVE: Does not work without
-}
+} // END uart_sendChar
 
+/*
+ * Receives data from UART 1
+ *
+ * @return data - 8 bits of data to receive
+ */
 char uart_receive(void)
 {
-
     char data = 0;
-
-    while (UART1_FR_R & 0b00010000)
-    { //keep waiting as long as FIFO receive is empty
-
+    while (UART1_FR_R & 0b00010000)             // Wait while receive FIFO is empty
+    {
     }
 
-    data = (char) (UART1_DR_R & 0xFF); //mask the 4 error bits and grab only 8 data bits
+    data = (char) (UART1_DR_R & 0xFF);          // Mask 4 error bits and grab only 8 data bits
 
     return data;
 
-}
+} // END uart_receive
 
+/*
+ * Transmit a string to UART1
+ * Terminates at null character
+ * Similar to lcd_puts from lcd.c
+ *
+ * @param data - String pointer
+ */
 void uart_sendStr(const char *data)
 {
-    //for reference see lcd_puts from lcd.c file
-
-    //While not equal to null
-    while (*data != '\0')
+    while (*data != '\0')                       // Terminate at null character
     {
         uart_sendChar(*data);
-        data++;
+        data++;                                 // Move to next char
     }
-}
-
-void uart_interrupt_init()
-{
-    // turn off uart1 while setting up
-    UART1_CTL_R &= 0b0111111110;
-
-    //clear interrupt flags
-    UART1_ICR_R = UART1_ICR_R | 0b11111110000;
-
-    // Enable interrupts for receiving bytes through UART1
-    UART1_IM_R |= 0b010000; //enable interrupt on receive - page 924
-
-    //NVIC_PRI1_R |= 0x00200000;
-
-    // Find the NVIC enable register and bit responsible for UART1 in table 2-9
-    // Note: NVIC register descriptions are found in chapter 3.4
-    NVIC_EN0_R &= 0x00000040;
-    NVIC_EN0_R |= 0x00000040; //enable uart1 interrupts - page 104
-
-    // Find the vector number of UART1 in table 2-9 ! UART1 is 22 from vector number page 104
-    IntRegister(INT_UART1, uart_interrupt_handler); //give the microcontroller the address of our interrupt handler - page 104 22 is the vector number
-    IntMasterEnable();
-
-    UART1_CTL_R |= 0b1100000001; // enable uart
-}
-
-void uart_interrupt_handler()
-{
-    if (UART1_MIS_R & 0b010000)
-    { // Has UART receive interrupt been signaled?
-
-        // Copy received data
-        uart_data = (char) (UART1_DR_R & 0xFF);
-        flag = 1;
-
-        // Clear receive bit interrupt (1 clears interrupt)
-        UART1_ICR_R = UART1_ICR_R | 010000;
-    }
-}
+} // END uart_sendStr

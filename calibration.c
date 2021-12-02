@@ -1,17 +1,29 @@
 /*
  *  calibration.c
  *
+ *  Collection of small programs to calibrate different cyBots.
+ *  Currently supports semi-atomatic calibration of the servo motor
+ *  and manual calibration of the IR sensor.
+ *
+ *  Each method is a standalone program meant to be ran independent of others.
+ *
+ *  To enable a program, set one of the the macros in main.c to 1 and leave all other 0:
+ *      _SERVO_CALIBRATION 0
+ *      _IR_CALIBRATION 0
+ *      _MAIN 0
+ *
  *  Created on: Nov 30, 2021
  *  Author: James Minardi
  */
 
-#include "scan.h"
+#include "calibration.h"
 
 // Clock cycles to increment for fast and slow modes
 #define FAST_INCREMENT 512
 #define SLOW_INCREMENT 128
 
-void bot_calibration(void) {
+void bot_calibration(void)
+{
 
 }
 
@@ -20,7 +32,7 @@ void bot_calibration(void) {
  *  User moves servo to 0 and 180 degrees and sets those values to
  *  right_calibration_value and left_calibration_value in main.c
  *
- *  Note: Intended to run entirely independent
+ *  Configuration in main.c:
  *      _SERVO_CALIBRATION 1
  *      _IR_CALIBRATION 0
  *      _MAIN 0
@@ -46,7 +58,7 @@ void servo_calibration(void)
 
     //Sets servo to the theoretical 0 degrees position.
     //Must disable and reenable the timer b before adjusting the match values
-    int match = 0x4A380;                // Theoretical 0 degrees: 304,000 (1ms = 0 degrees)
+    int match = 0x4A380;     // Theoretical 0 degrees: 304,000 (1ms = 0 degrees)
     TIMER1_CTL_R &= 0b011111111;        // Disable timer b
     TIMER1_TBMATCHR_R = match;
     TIMER1_TBPMR_R = match >> 16;
@@ -73,11 +85,11 @@ void servo_calibration(void)
                 right_value = match;
                 right = 0;
                 lcd_printf("1=L 2=R 3=Done\nLeft Val: %d", match);
-                timer_waitMillis(1000); // Waiting 1s to not double click and accidentally finish program
+                timer_waitMillis(1000); // Wait 1s to avoid the user from accidentally completing the program by pressing too long
             }
             else if (right == 0)
             {
-                // Break when adjusting left and it is confirmed
+                // Break from loop when left value is confirmed by user
                 left_value = match;
                 lcd_printf("Right: %d\nLeft: %d", right_value, left_value);
                 timer_waitMillis(500);
@@ -111,7 +123,6 @@ void servo_calibration(void)
     lcd_printf("Right: %d\nLeft: %d", right_value, left_value);
 } // END servo_calibration
 
-
 /*
  *  Small program to calibrate the IR sensor.
  *  User moves cyBot in front of flat surface and records the IR_raw_value at increments
@@ -119,21 +130,22 @@ void servo_calibration(void)
  *  inverse function. They will then enable and implement the equation in scan.c to the
  *  corresponding bot.
  *
- *  Input into graphing calculator with the IR_raw_value as the y-axis and centimeters
- *  as the x-axis.
+ *  Input the IR_raw_value as the y-axis and distance (cm) as the x-axis in a graphing calculator like desmos.
  *
- *  In Desmos, use equation:
+ *  In Desmos, use this equation:
  *
  *      y1 ~ a/(x1+b) + c
+ *          y1 is distance in cm
+ *          x1 is raw ir value
+ *      b and c are typcally negative
  *
- *
- *
- *  Note: Intended to run entirely independent
+ *  Configuration in main.c:
  *      _SERVO_CALIBRATION 0
  *      _IR_CALIBRATION 1
  *      _MAIN 0
  */
-void IR_calibration(void) {
+void IR_calibration(void)
+{
 
     servo_init1();
     adc_init();
@@ -141,7 +153,8 @@ void IR_calibration(void) {
     lcd_init();
 
     servo_move1(90);
-    while (1) {
+    while (1)
+    {
 
         float sound_dist = ping_read();
         adc_read();
@@ -151,7 +164,4 @@ void IR_calibration(void) {
 
     }
 } // END IR_calibration
-
-
-
 

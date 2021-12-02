@@ -38,6 +38,12 @@ int main(void)
     timer_init();
     lcd_init();
     uart_init();
+    servo_init1();
+    adc_init();
+    ping2_init();
+    button_init;
+    oi_t *sensor_data = oi_alloc();
+    oi_init(sensor_data);
 
 #endif // _MAIN
 
