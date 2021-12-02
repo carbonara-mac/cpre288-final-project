@@ -38,7 +38,7 @@ int main(void)
     timer_init();
     lcd_init();
     uart_init();
-    servo_init1();
+    servo_init();
     adc_init();
     ping_init();
     button_init;
