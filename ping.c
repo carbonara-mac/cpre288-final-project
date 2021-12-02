@@ -12,7 +12,12 @@ volatile enum states state; // Set by ISR
 volatile unsigned int rising_time; // Pulse start time: Set by ISR
 volatile unsigned int falling_time; // Pulse end time: Set by ISR
 
-void ping_init(void) //named ping2_init since there is already an instance of ping in libcybotscan
+/*
+ * Method used to initialize ping sensor's GPIO registers and timer
+ * registers based on settings such as capture mode, selecting timer#,
+ * selecting both positive and negative edge detection, etc.
+ */
+void ping_init(void)
 {
     state = LOW;
     //GPIO Initialization
@@ -42,6 +47,9 @@ void ping_init(void) //named ping2_init since there is already an instance of pi
 
 }
 
+/*
+ * Method to initilize and start up timer interrupt registers.
+ */
 void ping_interrupt_init(void)
 {
     TIMER3_ICR_R |= 0b010000000000; // Clears interrupt flags
@@ -62,8 +70,6 @@ void ping_interrupt_init(void)
  */
 void ping_timer3b_handler(void)
 {
-//    if (TIMER3_MIS_R & TIMER_MIS_CBEMIS == 1) // Check if Capture mode event interrupt is 1
-//    {
     if (state == LOW)
     { // If current state is low, set state to high and store start time
         rising_time = TIMER3_TBR_R;
@@ -84,7 +90,7 @@ void ping_timer3b_handler(void)
  * Disables interrupt, sets PB3 to GPIO output, sends trigger,
  * sets PB3 back to TIMER input device, clears interrupts, enables interrupt
  *
- *  returns distance Distance in cm
+ *  returns distance (Distance in cm)
  */
 float ping_read(void)
 {
@@ -121,7 +127,8 @@ float ping_read(void)
 }
 
 /*
- *
+ * Method used to send an output signal or "trigger"
+ * in order for signal to bounce off of object
  */
 void ping_send_trigger(void)
 {
@@ -143,5 +150,4 @@ void ping_send_trigger(void)
     TIMER3_ICR_R |= 0b010000000000; // Clear timer3B capture mode event interrupt
     TIMER3_IMR_R |= 0b010000000000; // Unmask timer3B capture mode event interrupt
 
-    //timer_waitMillis(0.01); //wait for ISR to capture rising and falling edge time ????
 }
