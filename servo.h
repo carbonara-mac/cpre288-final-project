@@ -35,7 +35,7 @@ int currentAngle;
  *  Initialize servo motor using Port B pin 5, and Timer 1B
  *  Timer 1B is set to split 16-bit count down, periodic, PWM timer
  */
-void servo_init1(void);
+void servo_init(void);
 
 /*
  * Moves servo motor to specified degrees.
@@ -43,7 +43,7 @@ void servo_init1(void);
  * @param degrees - Degrees to move servo motor to
  * @return match - Value for the specified degrees for debugging
  */
-int servo_move1(int degrees);
+int servo_move(int degrees);
 
 /**
  * Converts degrees to match value for the timer. Uses the left_calibration_value and right_calibration_value set by the user by using

@@ -12,7 +12,7 @@ volatile enum states state; // Set by ISR
 volatile unsigned int rising_time; // Pulse start time: Set by ISR
 volatile unsigned int falling_time; // Pulse end time: Set by ISR
 
-void ping2_init(void) //named ping2_init since there is already an instance of ping in libcybotscan
+void ping_init(void) //named ping2_init since there is already an instance of ping in libcybotscan
 {
     state = LOW;
     //GPIO Initialization

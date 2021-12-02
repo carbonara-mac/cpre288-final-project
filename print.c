@@ -76,7 +76,7 @@ void printScanHeader()
 
 void printBattery(oi_t *sensor_data)
 {
-    lcd_printf("Battery: %.2f\nVersion: %d", (float) (sensor_data->batteryCharge * (1.0) / sensor_data->batteryCapacity), (int) cyBOT_scan_version());
+    lcd_printf("Battery: %.2f\n", (float) (sensor_data->batteryCharge * (1.0) / sensor_data->batteryCapacity));
 }
 
 #endif /* PRINT_C_ */

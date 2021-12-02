@@ -14,7 +14,7 @@
  *  Initialize servo motor using Port B pin 5, and Timer 1B
  *  Timer 1B is set to split 16-bit count down, periodic, PWM timer
  */
-void servo_init1(void)
+void servo_init(void)
 {
     // System enable
     SYSCTL_RCGCGPIO_R |= 0b000010;      // enable port B clock
@@ -37,7 +37,7 @@ void servo_init1(void)
 
     TIMER1_CTL_R |= 0b100000000;        // Enable timer b
 
-    servo_move1(0);                    // Initialize to theoretical 0 degrees
+    servo_move(0);                    // Initialize to theoretical 0 degrees
 } // END servo_init
 
 /*
@@ -46,7 +46,7 @@ void servo_init1(void)
  * @param degrees - Degrees to move servo motor to
  * @return match - Value for the specified degrees for debugging
  */
-int servo_move1(int degrees)
+int servo_move(int degrees)
 {
     if (degrees < 0)    // For situations where input degrees may be less than 0
     {

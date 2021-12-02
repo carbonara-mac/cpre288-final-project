@@ -43,7 +43,7 @@ void servo_calibration(void)
     // Initializations for servo calibration
     timer_init();
     lcd_init();
-    servo_init1();
+    servo_init();
     button_init();
 
     // Local variables to display each calibration value on the lcd
@@ -147,12 +147,12 @@ void servo_calibration(void)
 void IR_calibration(void)
 {
 
-    servo_init1();
+    servo_init();
     adc_init();
-    ping2_init();
+    ping_init();
     lcd_init();
 
-    servo_move1(90);
+    servo_move(90);
     while (1)
     {
 

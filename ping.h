@@ -22,7 +22,7 @@ enum states
     LOW, HIGH, DONE
 }; // Set by ISR
 
-void ping2_init(void);
+void ping_init(void);
 void ping_interrupt_init(void);
 void ping_timer3b_handler(void);
 float ping_read(void);
