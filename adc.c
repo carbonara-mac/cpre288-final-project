@@ -125,6 +125,26 @@ float adc_to_cm(int raw)
  * @param raw - raw IR sample to conver to distance
  * @return distance - distance in centimeters
  */
+float adc_to_cm_1(int raw)
+{
+    return -1;
+}
+float adc_to_cm_2(int raw)
+{
+    return -1;
+}
+float adc_to_cm_3(int raw)
+{
+    return -1;
+}
+float adc_to_cm_4(int raw)
+{
+    return -1;
+}
+float adc_to_cm_5(int raw)
+{
+    return -1;
+}
 float adc_to_cm_6(int raw)
 {
     return -1;
