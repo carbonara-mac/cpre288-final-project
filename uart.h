@@ -25,7 +25,7 @@ volatile char uart_data;
  * When flag is 1, there is data to be read in uart_data
  * Must set flag to 0 when uart_data is read
  */
-volatile char uart_receive_flag;
+volatile int uart_receive_flag;
 
 /*
  * Initialize UART functionality using GPIO Port B wires 0:1 and UART1

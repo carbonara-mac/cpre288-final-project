@@ -19,6 +19,7 @@
 #include "uart.h"
 
 extern int current_angle; // servo.h
+extern volatile int uart_receive_flag;
 
 /*
  * Run _SERVO_CALIBRATION by itself to find values for these. Currently set for bot06
@@ -51,6 +52,33 @@ int main(void)
     button_init();
     oi_t *sensor_data = oi_alloc();
     oi_init(sensor_data);
+
+    char command[20];
+    for (size_t i = 0; i < sizeof(command); i++)
+    {
+        command[i] = 0;
+    }
+    int i = 0;
+    while (1)
+    {
+        if (uart_receive_flag == 1)
+        {
+            uart_receive_flag = 0;
+            command[i] = uart_data;
+            if (command[i] == '\0')
+            {
+                ui_parse(command);
+                for (size_t i = 0; i < sizeof(command); i++)
+                {
+                }
+            }
+        }
+
+    }
+
+
+
+
 
     // Test for scan method in scan.h
     int ang = 0;

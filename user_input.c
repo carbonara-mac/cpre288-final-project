@@ -1,24 +1,47 @@
 /*
- * userinptut.c
+ *  user_inptut.c
  *
  *  Created on: Nov 30, 2021
- *      Author: machargo
+ *  Author: Ainara Machargo, James Minardi
  */
-//THIS IS A WORK IN PROGRESS
 
-#include "open_interface.h"
-#include "object.h"
-#include "Timer.h"
-#include "lcd.h"
-#include "movement.h"
-#include "movement.c"
-#include "uart.c"
-#include "uart.h"
+#include "user_input.h"
 
+void ui_parse(char *command)
+{
+    char function = *command;
+    int parameter;
+    command++;
+
+    if (&command == '\0')
+    {
+        // One character command (ex. Scan0-180 (m) and quit (z))
+        parameter = -1;
+        ui_execute()
+    }
+    else
+    {
+        command++; // Skip ',' character
+        parameter = (int) strol(command, NULL, 10);
+        if (parameter < 0) // No parameter should be < 0
+        {
+            parameter = -1;
+        }
+    }
+
+}
+
+void ui_execute(char function, int parameter) {
+
+    // Case statements for function argument
+    //      -> Call different functions based on function arg and the parameter int
+    //      -> Ex. function=w and paramter=25, then call moveForward for 25 centimeters
+
+}
 
 
 main(void) {
-	
+
 volatile  char uart_data;  // Your UART interupt code can place read data here
 volatile  char flag;       // Your UART interupt can update this flag
                            // to indicate that it has placed new data
@@ -39,10 +62,10 @@ servo_init();
 
 char keyPressMsg[] = "Got an  \n\r";
 int valIndex = 7; //num for message
-char fbMsg[] = "How many milis?"; 
-char lrMsg[] = "How many degrees?"; 
+char fbMsg[] = "How many milis?";
+char lrMsg[] = "How many degrees?";
 
-int inputNum = 0; 
+int inputNum = 0;
 while (1){
 
   if (flag) {
@@ -56,9 +79,9 @@ while (1){
 
 	//forward
 	if(uart_data == 'w' ){
-	
+
 	inputNum = uart_data;
-	
+
 	oi_setWheels(inputNum, inputNum);
 	}
 	//backward
@@ -79,15 +102,15 @@ while (1){
 	if(uart_data == 'a' ){
 	uart_sendStr(lrMsg);
 	inputNum = uart_data;
-	
+
 	oi_setWheels(inputNum, -1* inputNum);
 	inputNum=0;
 	}
-	
+
 	//TODO
 	//scan 0-180
 	//scan in general
-	//print diagnostics 
+	//print diagnostics
 	//music command
 	//end command
 
