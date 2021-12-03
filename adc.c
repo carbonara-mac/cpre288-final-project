@@ -139,7 +139,7 @@ float adc_to_cm_3(int raw)
 }
 float adc_to_cm_4(int raw)
 {
-    return -1;
+    return (12993.9 / (raw - 579.346)); // NOT TESTED
 }
 float adc_to_cm_5(int raw)
 {
@@ -147,8 +147,15 @@ float adc_to_cm_5(int raw)
 }
 float adc_to_cm_6(int raw)
 {
-    return -1;
-}
+    if (raw < 438)
+    {
+        return 100.0;
+    }
+    else
+    {
+        return ((31103.3 / (raw - 115.697)) - 2.09641);
+    }
+} // END adc_to_cm_6
 
 float adc_to_cm_7(int raw)
 {
@@ -168,7 +175,7 @@ float adc_to_cm_10(int raw)
 }
 float adc_to_cm_11(int raw)
 {
-    return -1;
+    return ((21431.4 / (raw + 110.399)) - 2.48678); // NOT TESTED
 }
 float adc_to_cm_12(int raw)
 {
