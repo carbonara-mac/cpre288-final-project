@@ -38,6 +38,7 @@ void servo_init(void)
     TIMER1_CTL_R |= 0b100000000;        // Enable timer b
 
     servo_move(0);                    // Initialize to theoretical 0 degrees
+    timer_waitMillis(1000);
 } // END servo_init
 
 /*
@@ -46,18 +47,18 @@ void servo_init(void)
  * @param degrees - Degrees to move servo motor to
  * @return match - Value for the specified degrees for debugging
  */
-int servo_move(int degrees)
+int servo_move(int angle)
 {
-    if (degrees < 0)    // For situations where input degrees may be less than 0
+    if (angle < 0)    // For situations where input degrees may be less than 0
     {
-        degrees = 0;
+        angle = 0;
     }
-    if (degrees > 180)  // For situations where input degrees may be more than 0
+    if (angle > 180)  // For situations where input degrees may be more than 0
     {
-        degrees = 180;
+        angle = 180;
     }
 
-    int match = degrees_to_match(degrees); // Convert degrees to a timer match value
+    int match = angle_to_match(angle); // Convert degrees to a timer match value
 
     TIMER1_CTL_R &= 0b011111111;        // Disable timer
     TIMER1_TBMATCHR_R = match;          // Set match value for specified degrees
@@ -65,12 +66,10 @@ int servo_move(int degrees)
     TIMER1_CTL_R |= 0b100000000;        // Enable timer
 
     // Experimental formula to determine time to wait depending on how far the servo has to move
-    timer_waitMillis((abs(degrees - currentAngle) / 200) / 1000);
-    // Extra delay because previous formula was not enough time
-    timer_waitMillis(50);
+    timer_waitMillis(4 * abs(angle - current_angle) + 20); // Increase b value (ax+b) if having troubles
 
     // Update currentAngle
-    currentAngle = degrees;
+    current_angle = angle;
     return match;
 } // END servo_move
 
@@ -81,9 +80,9 @@ int servo_move(int degrees)
  * @param degrees - Degrees to convert to timer match value
  * @return timer - Match value for @param degrees
  */
-int degrees_to_match(int degrees)
+int angle_to_match(int angle)
 {
     float slope = (left_calibration_value - right_calibration_value) / 180.0;
-    return (slope * degrees) + right_calibration_value;
+    return (slope * angle) + right_calibration_value;
 } // END degrees_to_match
 

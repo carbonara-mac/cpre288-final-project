@@ -27,9 +27,8 @@ extern int left_calibration_value;  // main.c
 
 /*
  * Current angle of the servo motor
- * READ ONLY
  */
-int currentAngle;
+int current_angle;
 
 /*
  *  Initialize servo motor using Port B pin 5, and Timer 1B
@@ -40,19 +39,19 @@ void servo_init(void);
 /*
  * Moves servo motor to specified degrees.
  *
- * @param degrees - Degrees to move servo motor to
+ * @param angle - Degrees to move servo motor to
  * @return match - Value for the specified degrees for debugging
  */
-int servo_move(int degrees);
+int servo_move(int angle);
 
 /**
  * Converts degrees to match value for the timer. Uses the left_calibration_value and right_calibration_value set by the user by using
  * servo_calibration() in scan.h
  *
- * @param degrees - Degrees to convert to timer match value
+ * @param angle - Degrees to convert to timer match value
  * @return timer - Match value for @param degrees
  */
-int degrees_to_match(int degrees);
+int angle_to_match(int angle);
 
 
 #endif /* SERVO_H_ */
