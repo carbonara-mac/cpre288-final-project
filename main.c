@@ -3,7 +3,7 @@
  */
 
 // Run each independently of each other
-#define _SERVO_CALIBRATION 1
+#define _SERVO_CALIBRATION 0
 #define _IR_CALIBRATION 0
 #define _MAIN 0
 
@@ -19,7 +19,7 @@
 /*
  * Run _SERVO_CALIBRATION by itself to find values for these. Currently set for bot06
  */
-int right_calibration_value = 313984; // Run _SERVO_CALLIBRATION by itself to find values
+int right_calibration_value = 313984;
 int left_calibration_value = 286848;
 int BOT = 6;
 
@@ -41,7 +41,7 @@ int main(void)
     servo_init();
     adc_init();
     ping_init();
-    button_init;
+    button_init();
     oi_t *sensor_data = oi_alloc();
     oi_init(sensor_data);
 
