@@ -25,6 +25,7 @@
 #include "Timer.h"
 #include "ping.h"
 #include "adc.h"
+#include "open_interface.h"
 
 /*
  *  Small program to calibrate the servo motor.

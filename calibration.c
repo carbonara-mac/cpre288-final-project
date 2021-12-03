@@ -151,6 +151,8 @@ void IR_calibration(void)
     adc_init();
     ping_init();
     lcd_init();
+    oi_t *sensor_data = oi_alloc();
+    oi_init(sensor_data);
 
     servo_move(90);
     while (1)
@@ -158,8 +160,9 @@ void IR_calibration(void)
 
         float sound_dist = ping_read();
         adc_read();
+        float IR_dist = adc_to_cm(IR_raw_sample);
 
-        lcd_printf("sound: %f\nIR: %d\n", sound_dist, IR_raw_sample);
+        lcd_printf("sound: %.4f\nraw: %d\nir: %.4f\nbattery: %.2f%%", sound_dist, IR_raw_sample, adc_to_cm(IR_raw_sample), (float) (sensor_data->batteryCharge * (1.0) / sensor_data->batteryCapacity) * 100.0);
         timer_waitMillis(1000);
 
     }
