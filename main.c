@@ -5,7 +5,7 @@
 // Run each independently of each other
 #define _SERVO_CALIBRATION 0
 #define _IR_CALIBRATION 0
-#define _MAIN 0
+#define _MAIN 1
 
 #include <stdio.h>
 #include "scan.h"
@@ -15,6 +15,10 @@
 #include "servo.h"
 #include "ping.h"
 #include "calibration.h"
+#include "scan.h"
+#include "uart.h"
+
+extern int current_angle; // servo.h
 
 /*
  * Run _SERVO_CALIBRATION by itself to find values for these. Currently set for bot06
@@ -22,6 +26,9 @@
 int right_calibration_value = 313984;
 int left_calibration_value = 286848;
 int BOT = 6;
+
+scan_t get_scan;
+oi_t *sensor_data;
 
 int main(void)
 {
@@ -44,6 +51,15 @@ int main(void)
     button_init();
     oi_t *sensor_data = oi_alloc();
     oi_init(sensor_data);
+
+    // Test for scan method in scan.h
+    int ang = 0;
+    while (1) {
+        if (ang <= 180) {
+            scan(ang, &get_scan);
+            ang += 1;
+        }
+    }
 
 #endif // _MAIN
 

@@ -25,22 +25,16 @@
 extern int BOT; // main.c
 
 /*
- * Variable is updated after every call to adc_read
- * Must be converted using adc_
- * Note: Read only
- * TODO: Put in a struct with sonar?
- */
-int IR_raw_sample;
-
-/*
  * Initialize ADC using GPIO port B pin 4, ADC Module 0, and SS1
  */
 void adc_init(void);
 
 /*
- * Complete ADC conversion and read the sample, assigning it to IR_raw_sample
+ * Complete ADC conversion and assign sample to IR_raw_sample
+ *
+ * @return Raw sample for scan_ to convert using adc_to_cm
  */
-void adc_read(void);
+int adc_read(void);
 
 /*
  * Converts a raw IR sample to the distance in centimeters

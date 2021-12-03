@@ -39,8 +39,10 @@ void adc_init(void)
 
 /*
  * Complete ADC conversion and assign sample to IR_raw_sample
+ *
+ * @return Raw sample for scan_ to convert using adc_to_cm
  */
-void adc_read(void)
+int adc_read(void)
 {
 
     ADC0_PSSI_R |= 0b0010; 					// Enable SS1 sampling
@@ -49,8 +51,10 @@ void adc_read(void)
     {
     }
 
-    IR_raw_sample = ADC0_SSFIFO1_R;         // Read sample from AIN10 and set to IR_raw_sample
-    ADC0_ISC_R |= 0b0010; 					// Clear the interrupt in RIS
+    int IR_raw_sample = ADC0_SSFIFO1_R;         // Read sample from AIN10 and set to IR_raw_sample
+    ADC0_ISC_R |= 0b0010; 	                // Clear the interrupt in RIS
+
+    return IR_raw_sample;
 
 } // END adc_read
 
