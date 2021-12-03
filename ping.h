@@ -1,8 +1,8 @@
 /*
- * ping.h
+ *  ping.h
  *
  *  Created on: Oct 26, 2021
- *      Author: jminardi
+ *  Author: James Minardi, Danny Cao
  */
 
 #ifndef PING_H_
@@ -22,6 +22,18 @@ enum states
     LOW, HIGH, DONE
 }; // Set by ISR
 
+extern int BOT; // main.c
+
+volatile enum states state;
+/*
+ * Pulse start time set by ISR
+ */
+volatile unsigned int rising_time;
+/*
+ * Pulse end time set by ISR
+ */
+volatile unsigned int falling_time;
+
 /*
  * Method used to initialize ping sensor's GPIO registers and timer
  * registers based on settings such as capture mode, selecting timer#,
@@ -40,10 +52,9 @@ void ping_interrupt_init(void);
 void ping_timer3b_handler(void);
 
 /*
- * Disables interrupt, sets PB3 to GPIO output, sends trigger,
- * sets PB3 back to TIMER input device, clears interrupts, enables interrupt
+ * Finds the time it took for the ping to transmit and receive. Converts that value into distance (cm).
  *
- *  returns distance (Distance in cm)
+ * @return distance - distance in cm
  */
 float ping_read(void);
 
