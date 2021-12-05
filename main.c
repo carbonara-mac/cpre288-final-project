@@ -8,6 +8,7 @@
 #define _MAIN 1
 
 #include <stdio.h>
+#include "open_interface.h"
 #include "scan.h"
 #include "adc.h"
 #include "lcd.h"
@@ -17,6 +18,7 @@
 #include "calibration.h"
 #include "scan.h"
 #include "uart.h"
+#include "user_input.h"
 
 extern int current_angle; // servo.h
 extern volatile int uart_receive_flag;
@@ -30,6 +32,8 @@ int BOT = 6;
 
 scan_t get_scan;
 oi_t *sensor_data;
+
+void clear_array(char* command);
 
 int main(void)
 {
@@ -53,42 +57,45 @@ int main(void)
     oi_t *sensor_data = oi_alloc();
     oi_init(sensor_data);
 
+
     char command[20];
-    for (size_t i = 0; i < sizeof(command); i++)
-    {
-        command[i] = 0;
-    }
-    int i = 0;
+//    clear_array(command);
+
+    int cmd_index = 0;
     while (1)
     {
         if (uart_receive_flag == 1)
         {
             uart_receive_flag = 0;
-            command[i] = uart_data;
-            if (command[i] == '\0')
+            command[cmd_index] = uart_data;
+            lcd_putc(uart_data);
+            if (command[cmd_index] == '\0')
             {
-                ui_parse(command);
-                for (size_t i = 0; i < sizeof(command); i++)
-                {
-                }
+
+                lcd_printf("%s", command);
+                ui_parse(sensor_data, command);
+//                clear_array(command);
+                cmd_index = 0;
             }
-        }
+            else {
+                cmd_index++;
+            }
 
-    }
-
-
-
-
-
-    // Test for scan method in scan.h
-    int ang = 0;
-    while (1) {
-        if (ang <= 180) {
-            scan(ang, &get_scan);
-            ang += 1;
         }
     }
 
 #endif // _MAIN
+}
 
+/*
+ * Clears given array with null characters
+ * @param command - pointer to first
+ */
+void clear_array(char* command)
+{
+    int cmd_index = 0;
+    while (cmd_index < 15) {
+        *command = 0;
+        command++;
+    }
 }

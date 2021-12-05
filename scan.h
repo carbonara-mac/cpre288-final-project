@@ -27,6 +27,6 @@ typedef struct{
  *      angle - Direction to point the sensors to
  *      getScan - Location of a scan_t struct to store scan values
  */
-void scan(int angle, scan_t* get_scan);
+void scan(scan_t* get_scan, int angle);
 
 #endif /* SCAN_H_ */

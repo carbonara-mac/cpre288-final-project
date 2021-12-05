@@ -18,7 +18,7 @@
  *  back in "centimeters".
  *
  */
-int moveForward(oi_t *sensor_data, int centimeters);
+int move_forward(oi_t *sensor_data, int centimeters);
 
 /*
  *  Method used to navigate robot backwards.
@@ -27,7 +27,7 @@ int moveForward(oi_t *sensor_data, int centimeters);
  *  back in "centimeters".
  *
  */
-void moveBackward(oi_t *sensor_data, int centimeters);
+void move_backward(oi_t *sensor_data, int centimeters);
 
 /*
  *  Method used to rotate robot clockwise.
@@ -36,7 +36,7 @@ void moveBackward(oi_t *sensor_data, int centimeters);
  *  than the given input angle
  *
  */
-void turnRight(oi_t *sensor_data, int degrees);
+void rotate_clockwise(oi_t *sensor_data, int degrees);
 
 /*
  *  Method used to rotate robot counterclockwise.
@@ -45,7 +45,7 @@ void turnRight(oi_t *sensor_data, int degrees);
  *  than the given input angle
  *
  */
-void turnLeft(oi_t *sensor_data, int degrees);
+void rotate_counterClockwise(oi_t *sensor_data, int degrees);
 
 /*
  *  A large method to detect obstacles during movement of the robot.
@@ -67,7 +67,7 @@ void turnLeft(oi_t *sensor_data, int degrees);
  *         10 : Right cliff sensor detected hole
  *
  */
-int obstacleCheck(oi_t *sensor_data);
+int obstacle_check(oi_t *sensor_data);
 
 
 #endif /* MOVEMENT_H_ */

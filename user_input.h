@@ -11,6 +11,12 @@
 #define USER_INPUT_H_
 
 #include <stdio.h>
+#include <stdlib.h>
+#include "open_interface.h"
+#include "movement.h"
+#include "scan.h"
+
+extern scan_t get_scan;
 
 /* 
  * Parses given char pointer by the following formats:
@@ -21,7 +27,7 @@
  * 
  *  @param command - Null terminated char pointer to parse
  */
-void ui_parse(char *command);
+void ui_parse(oi_t *sensor_data, char *command);
 
 /*
  * Execute desired function with given integer parameter.
@@ -32,6 +38,6 @@ void ui_parse(char *command);
  * @param function - Single char to represent desired instructions to execute
  * 		  parameter - Integer value to give the function call as a distance or angle
  */
-void ui_execute(char function, int parameter);
+void ui_execute(oi_t *sensor_data, char function, int parameter);
 
 #endif /* USER_INPUT_H_ */

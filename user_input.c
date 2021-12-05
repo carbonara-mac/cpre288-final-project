@@ -19,9 +19,9 @@
  * 
  *  @param command - Null terminated char pointer to parse
  */
-void ui_parse(char *command)
+void ui_parse(oi_t *sensor_data, char command[])
 {
-    char function = *command;
+    char function = *(command);
     int parameter;
     command++;
 
@@ -29,17 +29,17 @@ void ui_parse(char *command)
     {
         // One character command (ex. Scan0-180 (m) and quit (z))
         parameter = -1;
-        ui_execute()
     }
     else
     {
         command++; // Skip ',' character
-        parameter = (int) strol(command, NULL, 10);
+        parameter = (int) strtol(command, NULL, 10);
         if (parameter < 0) // No parameter should be < 0
         {
             parameter = -1;
         }
     }
+    ui_execute(sensor_data, function, parameter);
 
 } // END ui-parse
 
@@ -53,28 +53,33 @@ void ui_parse(char *command)
  * @param function - Single char to represent desired instructions to execute
  * 		  parameter - Integer value to give the function call as a distance or angle
  */
-void ui_execute(char function, int parameter) {
+void ui_execute(oi_t *sensor_data, char function, int parameter) {
 	switch(function) {
-		case w:
+		case 'w':
 			// Move forward parameter centimeters
+		    move_forward(sensor_data, parameter);
 			break;
-		case s:
+		case 's':
 			// Move backward parameter centimeters
+		    move_backward(sensor_data, parameter);
 			break;
-		case a:
+		case 'a':
 			// Rotate counter clockwise parameter degrees
-			break;
-		case d:
+			rotate_counterClockwise(sensor_data, parameter);
+		    break;
+		case 'd':
 			// Rotate clockwise parameter degrees
+		    rotate_clockwise(sensor_data, parameter);
 			break;
-		case m:
+		case 'm':
 			if (parameter == -1) {
 				// Scan 0 to 180	
 			} else {
 				// Scan at parameter degrees
+			    scan(&get_scan, parameter);
 			}
 			break;
-		case z:
+		case 'z':
 			// Program completion
 			break;
 		default:
