@@ -124,18 +124,23 @@ void rotate_counterClockwise(oi_t *sensor_data, int degrees)
 int obstacle_check(oi_t *sensor_data)
 {
 //**************BUMPER SENSORS*******************************************
+		//beep if the robot bumps an object
+		unsigned char beep [1] = {60};
+        unsigned char duration[1] =  {25};
     if (sensor_data->bumpLeft)
     {
         oi_setWheels(0, 0); //STOP robot as soon as bump sensor = TRUE
         move_backward(sensor_data, 3);
-
+        oi_loadSong(1, 1, beep, duration);
+        oi_play_song(1);
         return 1; //return a 1 if left bump sensor = true
     }
     if (sensor_data->bumpRight)
     {
         oi_setWheels(0, 0); //STOP robot as soon as bumpRight = TRUE
         move_backward(sensor_data, 3);
-
+        oi_loadSong(1, 1, beep, duration);
+        oi_play_song(1);
         return 2; //returns a 2 if right bump sensor = true
     }
 //************CLIFF SENSORS***********************************************
